@@ -1,25 +1,27 @@
 package lk.medicare.db;
 
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Properties;
 
 public class Db {
+
     private static Connection conn;
 
     public static Connection get() throws Exception {
         if (conn == null || conn.isClosed()) {
-            Properties p = new Properties();
-            try (InputStream in = Db.class.getClassLoader().getResourceAsStream("db.properties")) {
-                p.load(in);
-            }
-            conn = DriverManager.getConnection(
-                    p.getProperty("db.url"),
-                    p.getProperty("db.user"),
-                    p.getProperty("db.password")
-            );
+
+            // Load MySQL driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Direct MySQL connection values
+            String url = "jdbc:mysql://localhost:3306/medicareplus?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+            String user = "root";
+            String pass = ""; // add your password if you have one
+
+            // Connect
+            conn = DriverManager.getConnection(url, user, pass);
         }
+
         return conn;
     }
 }

@@ -38,19 +38,34 @@ public class LoginFrame extends JFrame {
                 JOptionPane.showMessageDialog(this, "Invalid credentials.", "Login", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            // Route by role
+
             dispose();
-            switch (u.role) {
-                case "PATIENT" -> new PatientDashboard(u).setVisible(true);
-                case "DOCTOR" -> new DoctorDashboard(u).setVisible(true);
-                case "RECEPTIONIST" -> new ReceptionistDashboard(u).setVisible(true);
-                case "ADMIN" -> new AdminDashboard(u).setVisible(true);
+
+            // Option 2 — PATIENT → PatientDashboard
+            switch (u.role.toUpperCase()) {
+
+                case "PATIENT" -> {
+                    new PatientDashboard(u).setVisible(true);
+                }
+
+                case "DOCTOR" -> {
+                    new DoctorDashboard(u).setVisible(true);
+                }
+
+                case "RECEPTIONIST" -> {
+                    new ReceptionistDashboard(u).setVisible(true);
+                }
+
+                case "ADMIN" -> {
+                    new AdminDashboard(u).setVisible(true);
+                }
+
                 default -> JOptionPane.showMessageDialog(null, "Unknown role: " + u.role);
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
-
