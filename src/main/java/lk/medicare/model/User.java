@@ -3,7 +3,13 @@ package lk.medicare.model;
 public class User {
     public int userId;
     public String username;
-    public String role; // PATIENT / DOCTOR / ADMIN / RECEPTIONIST
-    public Integer patientId; // nullable
-    public Integer doctorId;  // nullable
+    public String fullName;
+    public String role;
+    public Integer branchId;
+
+    // These two fields are required by ScheduleAppointmentPanel
+    public Integer patientId;
+    public Integer doctorId;
+
+    public User() {}
 }
