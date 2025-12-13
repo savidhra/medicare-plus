@@ -2,29 +2,41 @@ package lk.medicare.dao;
 
 import lk.medicare.db.Db;
 import lk.medicare.model.User;
+import lk.medicare.util.SecurityUtil;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class UserDao {
-    // DEMO ONLY: PasswordHash is plain. Replace with BCrypt in real use.
-    public User authenticate(String username, String password) throws Exception {
-        String sql = """
-            SELECT UserId, Username, Role, PatientId, DoctorId 
-            FROM UserAccount 
-            WHERE Username = ? AND `Password` = ?
-        """;
-        try (PreparedStatement ps = Db.get().prepareStatement(sql)) {
+
+    public User authenticate(String username, String plainPassword) throws Exception {
+
+
+        String hashedPassword = SecurityUtil.hashPassword(plainPassword);
+
+
+        String sql = "SELECT UserId, Username, Role, FullName, PatientId, DoctorId, BranchId " +
+                "FROM Users WHERE Username = ? AND PasswordHash = ?";
+
+        try (Connection c = Db.get();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
             ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(2, hashedPassword);
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    User u = new User();
-                    u.userId = rs.getInt("UserId");
-                    u.username = rs.getString("Username");
-                    u.role = rs.getString("Role");
-                    int p = rs.getInt("PatientId");   u.patientId = rs.wasNull() ? null : p;
-                    int d = rs.getInt("DoctorId");    u.doctorId = rs.wasNull() ? null : d;
-                    return u;
+
+                    return new User(
+                            rs.getInt("UserId"),
+                            rs.getString("Username"),
+                            rs.getString("Role"),
+                            rs.getString("FullName"),
+                            rs.getInt("PatientId"),
+                            rs.getInt("DoctorId"),
+                            rs.getInt("BranchId")
+                    );
                 }
             }
         }

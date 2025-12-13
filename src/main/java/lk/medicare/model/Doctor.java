@@ -2,8 +2,25 @@ package lk.medicare.model;
 
 public class Doctor {
     public int doctorId;
-    public String fullName;
+    public int branchId;
+    public String firstName;
+    public String lastName;
     public String specialization;
+    public String phone;
+    public String email;
+    public String roomNo;
 
-    @Override public String toString() { return fullName + " (" + specialization + ")"; }
+    public Doctor() {}
+
+    public Doctor(int doctorId, String firstName, String lastName, String specialization) {
+        this.doctorId = doctorId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.specialization = specialization;
+    }
+
+    @Override
+    public String toString() {
+        return "Dr. " + firstName + " " + lastName + " (" + specialization + ")";
+    }
 }
